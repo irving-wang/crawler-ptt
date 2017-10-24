@@ -104,7 +104,7 @@ public class DocWebCrawler extends WebCrawler {
 //	    Path htmlPath = storageFolder.resolve(page.getWebURL().getDomain()).resolve(page.getWebURL().getDocid()+".html");
 	    Path htmlPath = storageFolder.resolve(webUrl.getSubDomain() + "." + webUrl.getDomain());
 	    htmlPath = Paths.get(htmlPath.toString(), page.getWebURL().getPath());
-	    System.out.println("htmlPath="+htmlPath);
+//	    System.out.println("HtmlPath: "+htmlPath);
 	    
 	    try {
 		Files.createDirectories(htmlPath.getParent());
