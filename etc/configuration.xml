@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<configuration>
+	<config>
+		<log>C:\Developer\workspace\crawler-ptt\etc\logback.xml</log>
+	</config>
+	<directory>
+		<logging_root>C:\data\log</logging_root>
+		<rawdata_storage>C:\data\crawl\root\www.ptt.cc\bbs\Stock</rawdata_storage>
+		<backup_storage>C:\data\crawl\root\www.ptt.cc\bbs\Stock_backup</backup_storage>
+	</directory>
+	
+	<crawler4j>
+		
+	</crawler4j>
+	
+	<persistence>
+		<datasource_url>jdbc:mysql://localhost:3306/ptt</datasource_url>
+		<driver_class_name>org.mariadb.jdbc.Driver</driver_class_name>
+		<username>root</username>
+		<password>1234</password>
+	</persistence>
+</configuration>

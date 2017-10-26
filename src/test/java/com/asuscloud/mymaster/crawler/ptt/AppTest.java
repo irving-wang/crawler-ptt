@@ -22,14 +22,15 @@ public class AppTest {
 
     
     @Test
-    public void testParse() throws UnsupportedEncodingException, IOException{
-	Path path = Paths.get("D:\\workspace\\crawler-ptt\\src\\test\\resources\\M.1508992024.A.A4E.html");
+    public void testParse() throws UnsupportedEncodingException, IOException, ParseException{
+	Path path = Paths.get("C:\\data\\crawl\\root\\www.ptt.cc\\bbs\\Stock", "M.1426130171.A.0AC.html");
 	
 	PttArticleParser parser = new PttArticleParser();
 	
 	Article bean = new Article();
 	bean.setBoard("stock");
-	bean.setUri("M.1508992024.A.A4E.html");
+	bean.setUri(path.getFileName().toString());
+	
 	parser.parseArticle(new String(Files.readAllBytes(path), "utf-8"), bean);
 	
 //	System.out.println(bean.getContent());
