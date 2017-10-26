@@ -13,7 +13,8 @@ public class Push {
     
     private long id;
     private String post_id;
-    private int tag;
+    private String board;
+    private String tag;
     private long parent;
     private String userid;
     private String content;
@@ -31,10 +32,18 @@ public class Push {
     public void setPost_id(String post_id) {
         this.post_id = post_id;
     }
-    public int getTag() {
+    public String getBoard()
+	{
+		return board;
+	}
+	public void setBoard(String board)
+	{
+		this.board = board;
+	}
+	public String getTag() {
         return tag;
     }
-    public void setTag(int tag) {
+    public void setTag(String tag) {
         this.tag = tag;
     }
     public long getParent() {

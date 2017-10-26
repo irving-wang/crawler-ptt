@@ -13,6 +13,7 @@ import java.util.List;
 public class Article {
     
     private String uri;
+    private String board;
     private String userid;
     private String nickname;
     private String title;
@@ -30,7 +31,15 @@ public class Article {
     public void setUri(String uri) {
         this.uri = uri;
     }
-    public String getUserid() {
+    public String getBoard()
+	{
+		return board;
+	}
+	public void setBoard(String board)
+	{
+		this.board = board;
+	}
+	public String getUserid() {
         return userid;
     }
     public void setUserid(String userid) {
