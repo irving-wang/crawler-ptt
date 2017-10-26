@@ -4,6 +4,7 @@
 package com.asuscloud.mymaster.crawler.ptt.model;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Irving
@@ -20,6 +21,9 @@ public class Article {
     private String ip;
     private int pushs;
     private String parent_uri;
+    
+    private List<Push> pushList;
+    
     public String getUri() {
         return uri;
     }
@@ -73,6 +77,12 @@ public class Article {
     }
     public void setParent_uri(String parent_uri) {
         this.parent_uri = parent_uri;
+    }
+    public List<Push> getPushList() {
+        return pushList;
+    }
+    public void setPushList(List<Push> pushList) {
+        this.pushList = pushList;
     }
     
 /*
