@@ -1,26 +1,47 @@
 <configuration>
 
-    <property name="LOG_HOME" value="logs" />
-    <property name="LOG_FILE_NAME" value="/crawler4j.log" />
+	<property name="LOG_HOME" value="E:\workspace\crawler-ptt\logs" />
+	<property name="LOG_FILE_NAME" value="/crawler4j.log" />
 
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%date{HH:mm:ss} %-5level [%thread] - [%logger{0}]- %msg%n</pattern>
-        </encoder>
-    </appender>
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%date{HH:mm:ss} %-5level [%thread] - [%logger{0}]- %msg%n
+			</pattern>
+		</encoder>
+	</appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>${LOG_HOME}/${LOG_FILE_NAME}</file>
-        <encoder>
-            <pattern>%date %-5level [%thread] - [%logger] - %msg%n</pattern>
-        </encoder>
-    </appender>
+<!-- 	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+		<file>${LOG_HOME}/${LOG_FILE_NAME}</file>
+		<encoder>
+			<pattern>%date %-5level [%thread] - [%logger] - %msg%n</pattern>
+		</encoder>
+	</appender> -->
+	<appender name="FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_HOME}/${LOG_FILE_NAME}</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- hourly rollover -->
+			<fileNamePattern>${LOG_HOME}/${LOG_FILE_NAME}.%d{yyyy-MM-dd_HH}.log</fileNamePattern>
 
-    <logger name="com.github.tomakehurst" level="ERROR"/>
-    <logger name="org.eclipse.jetty" level="ERROR" />
+			<!-- keep 30 days' worth of history capped at 3GB total size -->
+			<!-- <maxHistory>30</maxHistory>
+			<totalSizeCap>3GB</totalSizeCap> -->
 
-    <root level="DEBUG">
-        <appender-ref ref="STDOUT" />
-        <!--<appender-ref ref="FILE" />-->
-    </root>
+		</rollingPolicy>
+
+		<encoder>
+			<!-- <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n </pattern> -->
+			<pattern>%date %-5level [%thread] - [%logger] - %msg%n</pattern>
+		</encoder>
+	</appender>
+	<logger name="com.github.tomakehurst" level="ERROR" />
+	<logger name="org.eclipse.jetty" level="ERROR" />
+
+	<logger name="com.asuscloud.mymaster.crawler" level="TRACE">
+		<appender-ref ref="FILE" />
+	</logger>
+
+	<root level="DEBUG">
+		<appender-ref ref="STDOUT"  />
+	</root>
 </configuration>

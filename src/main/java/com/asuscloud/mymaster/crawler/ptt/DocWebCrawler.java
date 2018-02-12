@@ -5,6 +5,7 @@ package com.asuscloud.mymaster.crawler.ptt;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.invoke.MethodHandles;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,7 +13,8 @@ import java.nio.file.StandardOpenOption;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
@@ -24,17 +26,13 @@ import edu.uci.ics.crawler4j.url.WebURL;
  *
  */
 public class DocWebCrawler extends WebCrawler {
+    private Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final static Pattern FILTERS = Pattern.compile(".*(\\.(css|js|gif|jpg"
 	    						   + "|png|mp3|mp4|zip|gz))$");
     
     private static Path storageFolder;
-//    private static String[] crawlDomains;
-
-    public static void configure(String storageFolderName) {
-//        crawlDomains = domain;
-
-        storageFolder = Paths.get(storageFolderName);
-        
+    static {
+        storageFolder = Paths.get(CrawlerConfiguration.CRAWL_STORAGE_ROOT);
         if (!Files.exists(storageFolder)) {
             try {
 		Files.createDirectories(storageFolder);
@@ -42,18 +40,6 @@ public class DocWebCrawler extends WebCrawler {
 		e.printStackTrace();
 	    }
         }
-        
-//	for (String crawlDomain : crawlDomains) {
-//	    Path domainPath = storageFolder.resolve(Paths.get(crawlDomain));
-//	    System.out.println(domainPath);
-//	    if (!Files.exists(domainPath)) {
-//	            try {
-//			Files.createDirectories(domainPath);
-//		    } catch (IOException e) {
-//			e.printStackTrace();
-//		    }
-//	        }
-//	}
     }
 
     /**
@@ -68,15 +54,41 @@ public class DocWebCrawler extends WebCrawler {
      */
     @Override
     public boolean shouldVisit(Page referringPage, WebURL url) {
-	String href = url.getURL();
+//	System.out.println(ToStringBuilder.reflectionToString(url));
+
+	if (FILTERS.matcher(url.getURL()).matches())
+	    return false;
+
+	for (String txt : CrawlerConfiguration.FILTER_ANCHORS) {
+	    if (url.getAnchor() != null && url.getAnchor().startsWith(txt)) {
+		return false;
+	    }
+	}
+	for (String txt : CrawlerConfiguration.FILTER_URLS) {
+	    if (url.getURL() != null && url.getURL().startsWith(txt)) {
+		return false;
+	    }
+	}
+	for (String txt : CrawlerConfiguration.FILTER_PATHS) {
+	    if (url.getPath() != null && url.getPath().startsWith(txt)) {
+		return false;
+	    }
+	}
+
+	for (String txt : CrawlerConfiguration.VISIT_URLS) {
+	    if (url.getURL() != null && url.getURL().startsWith(txt)) {
+		return true;
+	    }
+	}
 	
-	return !FILTERS.matcher(href).matches()
-		&& !url.getPath().equals("/bbs/Stock/index1.html")
-		&& (
-//			url.getDomain().equals("ptt.cc") ||
-			href.startsWith("https://www.ptt.cc/bbs/Stock") 
-			|| href.startsWith("http://www.ptt.cc/bbs/Stock")
-			);
+	return false;
+//	return !FILTERS.matcher(url.getURL()).matches()
+////		&& !url.getPath().equals("/bbs/Stock/index1.html")
+//		&& (
+////			url.getDomain().equals("ptt.cc") ||
+//			url.getURL().startsWith("https://www.ptt.cc/bbs/Stock") 
+//			|| url.getURL().startsWith("http://www.ptt.cc/bbs/Stock")
+//			);
     }
 
     /**
@@ -86,7 +98,7 @@ public class DocWebCrawler extends WebCrawler {
     @Override
     public void visit(Page page) {
 	String url = page.getWebURL().getURL();
-	System.out.println("URL: " + url);
+	log.debug("URL: {}", url);
 
 	if (page.getParseData() instanceof HtmlParseData) {
 	    HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
@@ -94,11 +106,11 @@ public class DocWebCrawler extends WebCrawler {
 	    String html = htmlParseData.getHtml();
 	    Set<WebURL> links = htmlParseData.getOutgoingUrls();
 
-	    System.out.println("Text length: " + text.length());
-	    System.out.println("Html length: " + html.length());
-	    System.out.println("Number of outgoing links: " + links.size());
+	    log.trace("Text length: {}", text.length());
+	    log.trace("Html length: {}", html.length());
+	    log.trace("Number of outgoing links: {}", links.size());
 	    
-	    System.out.println(ToStringBuilder.reflectionToString(page.getWebURL()));
+//	    log.trace(ToStringBuilder.reflectionToString(page.getWebURL()));
 
 	    WebURL webUrl = page.getWebURL();
 //	    Path htmlPath = storageFolder.resolve(page.getWebURL().getDomain()).resolve(page.getWebURL().getDocid()+".html");

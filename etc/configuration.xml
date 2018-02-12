@@ -1,20 +1,35 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <configuration>
 	<config>
-		<log>C:\Developer\workspace\crawler-ptt\etc\logback.xml</log>
+		<log>E:\workspace\crawler-ptt\etc\logback.xml</log>
 	</config>
 	<directory>
-		<logging_root>C:\data\log</logging_root>
-		<rawdata_storage>C:\data\crawl\root\www.ptt.cc\bbs\Stock</rawdata_storage>
-		<backup_storage>C:\data\crawl\root\www.ptt.cc\bbs\Stock_backup</backup_storage>
+		<logging_root>E:\data\log</logging_root>
+		<rawdata_storage>E:\data\crawl\root\www.ptt.cc\bbs\Stock</rawdata_storage>
+		<backup_storage>E:\data\crawl\root\www.ptt.cc\bbs\Stock_backup</backup_storage>
+		<crawl_storage_root>E:/data/crawl/root</crawl_storage_root>
 	</directory>
 	
 	<crawler4j>
-		
+		<number_of_crawlers>7</number_of_crawlers>
+		<max_depth_of_crawling>-1</max_depth_of_crawling>
+		<seeds>
+			<!-- <page>https://www.ptt.cc/bbs/Stock/</page> -->
+			<page>https://www.ptt.cc/bbs/Stock/index1430.html</page>
+		</seeds>
+		<filters><!-- startWiths -->
+			<anchor>下頁</anchor>
+			<path>/bbs/Stock/index1.html</path>
+			<url>https://www.ptt.cc/bbs/Stock/index.html</url>
+		</filters>
+		<visits><!-- startWiths -->
+			<url>https://www.ptt.cc/bbs/Stock</url>
+			<url>http://www.ptt.cc/bbs/Stock</url>
+		</visits>
 	</crawler4j>
 	
 	<persistence>
-		<datasource_url>jdbc:mysql://localhost:3306/ptt</datasource_url>
+		<datasource_url>jdbc:mysql://localhost:3306/ptt1</datasource_url>
 		<driver_class_name>org.mariadb.jdbc.Driver</driver_class_name>
 		<username>root</username>
 		<password>1234</password>
