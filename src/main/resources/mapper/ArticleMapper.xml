@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.mysparks.camellia.scumaster.ArticleMapper">
+	<insert id="insertArticle">
+		insert into articles(uri, board, userid, nickname, title, item_date, content, ip, parent_uri, pushs)
+		 values (#{uri}, #{board}, #{userid}, #{nickname}, #{title}, #{item_date}, #{content}, #{ip}, #{parent_uri}, #{pushs})
+	</insert>
+	
+	<insert id="insertPush">
+		insert into pushs(id, post_id, board, tag, userid, content, item_date)
+		 values (#{id}, #{post_id}, #{board}, #{tag}, #{userid}, #{content}, #{item_date})
+	</insert>
+</mapper>

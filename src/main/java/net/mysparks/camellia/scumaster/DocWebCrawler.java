@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.asuscloud.mymaster.crawler.ptt;
+package net.mysparks.camellia.scumaster;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

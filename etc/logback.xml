@@ -1,21 +1,23 @@
 <configuration>
 
-	<property name="LOG_HOME" value="E:\workspace\crawler-ptt\logs" />
+	<property name="LOG_HOME" value="E:/workspace/scu-master/logs" />
 	<property name="LOG_FILE_NAME" value="/crawler4j.log" />
 
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
-			<pattern>%date{HH:mm:ss} %-5level [%thread] - [%logger{0}]- %msg%n
-			</pattern>
+			<pattern>%date{HH:mm:ss} %-5level [%thread] - [%logger{20}]- %msg%n</pattern>
 		</encoder>
 	</appender>
 
-<!-- 	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
-		<file>${LOG_HOME}/${LOG_FILE_NAME}</file>
+	<appender name="ERROR" class="ch.qos.logback.core.FileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>ERROR</level>
+		</filter>
+		<file>${LOG_HOME}/ERROR.log</file>
 		<encoder>
-			<pattern>%date %-5level [%thread] - [%logger] - %msg%n</pattern>
+			<pattern>%date %-5level [%thread] - [%logger{20}] - %msg%n</pattern>
 		</encoder>
-	</appender> -->
+	</appender>
 	<appender name="FILE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${LOG_HOME}/${LOG_FILE_NAME}</file>
@@ -24,24 +26,23 @@
 			<fileNamePattern>${LOG_HOME}/${LOG_FILE_NAME}.%d{yyyy-MM-dd_HH}.log</fileNamePattern>
 
 			<!-- keep 30 days' worth of history capped at 3GB total size -->
-			<!-- <maxHistory>30</maxHistory>
-			<totalSizeCap>3GB</totalSizeCap> -->
+			<!-- <maxHistory>30</maxHistory> <totalSizeCap>3GB</totalSizeCap> -->
 
 		</rollingPolicy>
 
 		<encoder>
 			<!-- <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n </pattern> -->
-			<pattern>%date %-5level [%thread] - [%logger] - %msg%n</pattern>
+			<pattern>%date %-5level [%thread] - [%logger{20}] - %msg%n</pattern>
 		</encoder>
 	</appender>
-	<logger name="com.github.tomakehurst" level="ERROR" />
-	<logger name="org.eclipse.jetty" level="ERROR" />
-
-	<logger name="com.asuscloud.mymaster.crawler" level="TRACE">
+	<logger name="org.apache.ibatis" level="INFO" />
+	<logger name="net.mysparks.camellia.scumaster.StockMapper" level="INFO"/>
+	<logger name="net.mysparks.camellia.scumaster.ArticleMapper" level="INFO"/>
+	<logger name="net.mysparks.camellia.scumaster" level="TRACE">
 		<appender-ref ref="FILE" />
 	</logger>
-
 	<root level="DEBUG">
-		<appender-ref ref="STDOUT"  />
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="ERROR" />
 	</root>
 </configuration>

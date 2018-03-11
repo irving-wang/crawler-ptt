@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.asuscloud.mymaster.crawler.ptt.model;
+package net.mysparks.camellia.scumaster.model;
 
 import java.util.Date;
 import java.util.List;

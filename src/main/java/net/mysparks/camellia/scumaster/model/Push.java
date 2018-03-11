@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.asuscloud.mymaster.crawler.ptt.model;
+package net.mysparks.camellia.scumaster.model;
 
 import java.util.Date;
 
@@ -15,7 +15,6 @@ public class Push {
     private String post_id;
     private String board;
     private String tag;
-    private long parent;
     private String userid;
     private String content;
     private Date item_date;
@@ -45,12 +44,6 @@ public class Push {
     }
     public void setTag(String tag) {
         this.tag = tag;
-    }
-    public long getParent() {
-        return parent;
-    }
-    public void setParent(long parent) {
-        this.parent = parent;
     }
     public String getUserid() {
         return userid;

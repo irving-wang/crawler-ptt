@@ -1,29 +1,34 @@
-package com.asuscloud.mymaster.crawler.ptt;
+package net.mysparks.camellia.scumaster;
 
+import java.lang.invoke.MethodHandles;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.asuscloud.mymaster.crawler.ptt.db.PttBbsDao;
-import com.asuscloud.mymaster.crawler.ptt.model.Article;
-import com.asuscloud.mymaster.crawler.ptt.parser.PttArticleParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import ch.qos.logback.classic.util.ContextInitializer;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
+import net.mysparks.camellia.scumaster.dao.ArticleDao;
+import net.mysparks.camellia.scumaster.model.Article;
+import net.mysparks.camellia.scumaster.parser.PttArticleParser;
+import net.mysparks.camellia.scumaster.parser.PttParseException;
 
 /**
  * 
  *
  */
 public class PttCrawlerApp {
-//    private static Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     
     public static void main(String[] args) throws Exception {
 	CrawlerConfiguration.loadConfiguration();
 	
+	System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, CrawlerConfiguration.LOG_CONFIG);
 //	setupLog();
 	
 	for (int i = 0; i < args.length; i++) {
@@ -36,32 +41,40 @@ public class PttCrawlerApp {
     }
 
     public void importToDB() throws Exception {
+	Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	Path backup = Paths.get(CrawlerConfiguration.BACKUP_STORAGE);
 	Path rawdata = Paths.get(CrawlerConfiguration.RAWDATD_STORAGE);
+	Path irregular = Paths.get(CrawlerConfiguration.IRREGULAR_STORAGE);
 	Files.createDirectories(backup);
 	Files.createDirectories(rawdata);
-	PttBbsDao dao = new PttBbsDao();
+//	PttBbsDao dao = new PttBbsDao();
+	ArticleDao dao = new ArticleDao();
+	PttArticleParser parser = new PttArticleParser();
 	for (Path path : Files.newDirectoryStream(rawdata)) {
 	    if (Files.isDirectory(path) || path.getFileName().toString().startsWith("index"))
 		continue;
-
-	    PttArticleParser parser = new PttArticleParser();
-
+	    
+	    Article bean = new Article();
 	    try {
-		Article bean = new Article();
 		bean.setBoard("stock");
 		bean.setParent_uri("");
 		bean.setUri(path.getFileName().toString());
 		parser.parseArticle(new String(Files.readAllBytes(path), "utf-8"), bean);
 
 		if (bean.getIp() != null) {
-		    int c = dao.insertArticle(bean);
+		    int c = dao.insertArticleAndPush(bean);
 		    if (c > 0) {
 			Files.move(path, backup.resolve(path.getFileName()));
 		    }
+		} else {
+		    log.error("Article hasn't IP. {}", bean.getUri());
+		    Files.move(path, irregular.resolve(path.getFileName()));
 		}
+	    } catch (PttParseException e) {
+		log.error("Article parse fail: {} {}", e.getMessage(), bean.getUri());
+		Files.move(path, irregular.resolve(path.getFileName()));
 	    } catch (Exception e) {
-		e.printStackTrace();
+		log.error("Parse fail. {} {}", e.getMessage(), bean.getUri());
 	    }
 
 	}

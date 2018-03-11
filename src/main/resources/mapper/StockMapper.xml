@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.mysparks.camellia.scumaster.StockMapper">
+	<insert id="insertStock">
+		insert into stocks(code, name, alias, sort, market)
+		 values (#{code}, #{name}, #{alias}, #{sort}, #{market})
+	</insert>
+	
+	<insert id="insertOhlc">
+		insert into ohlcs(stock, date, open, high, low, close, changes, rate, volume)
+		 values (#{stock}, #{date}, #{open}, #{high}, #{low}, #{close}, #{change}, #{rate}, #{volume})
+	</insert>
+</mapper>
